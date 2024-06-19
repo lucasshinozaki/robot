@@ -1,5 +1,6 @@
 *** Settings ***
 Library          SeleniumLibrary
+Library          FakerLibrary    locale=pt_BR
 Resource         setup_teardown.robot
 Test Setup       Dado que eu acesso o Oragano
 Test Teardown    Fechar o navegador
@@ -26,12 +27,20 @@ Verificar se ao preencher os campos do formulário corretamente os dados são in
     E clique no botão criar card
     Então identificar o car no time esperado
 
+Verificar se é possivel criar mais de um card se preenchermos os campos corretamente
+    Dado que preencha os campos do formulário
+    E clique no botão criar card
+    Então identificar 3 cards no time esperado
+
 *** Keywords ***
 
 Dado que preencha os campos do formulário
-    Input Text    ${CAMPO_NOME}    Lucas
-    Input Text    ${CAMPO_CARGO}    Desenvolvedor
-    Input Text    ${CAMPO_IMAGEM}    https://picsum.photos/200/300
+    ${Nome}          FakerLibrary.First Name
+    ${Cargo}         FakerLibrary.Job
+    ${Imagem}        FakerLibrary.Image Url
+    Input Text       ${CAMPO_NOME}      ${Nome}
+    Input Text       ${CAMPO_CARGO}     ${Cargo}
+    Input Text       ${CAMPO_IMAGEM}    ${Imagem}
     Click Element    ${CAMPO_TIME}
     Click Element    ${OPCAO_PROGRAMACAO}
 
@@ -40,4 +49,10 @@ E clique no botão criar card
 
 Então identificar o car no time esperado
     Element Should Be Visible    class:colaborador
-    Sleep    5s
+
+Então identificar 3 cards no time esperado
+    FOR    ${i}    IN RANGE    1    3
+        Dado que preencha os campos do formulário
+        E clique no botão criar card 
+    END
+    Sleep    10s
