@@ -1,5 +1,8 @@
 *** Settings ***
-Library    SeleniumLibrary
+Library          SeleniumLibrary
+Resource         setup_teardown.robot
+Test Setup       Dado que eu acesso o Oragano
+Test Teardown    Fechar o navegador
 
 *** Variables ***
 ${URL}                    http://localhost:3000/
@@ -19,16 +22,13 @@ ${OPCAO_INOVACAO}         //option[contains(.,'Inovação e Gestão')]
 *** Test Cases ***
 
 Verificar se ao preencher os campos do formulário corretamente os dados são inseridos na lista e se um novo card é criado no time esperado
-    Dado que eu acesso o Oragano
-    E preencha os campos do formulário
+    Dado que preencha os campos do formulário
     E clique no botão criar card
     Então identificar o car no time esperado
 
-*** Keywords
-Dado que eu acesso o Oragano
-    Open Browser    url=http://localhost:3000/    browser=Chrome
+*** Keywords ***
 
-E preencha os campos do formulário
+Dado que preencha os campos do formulário
     Input Text    ${CAMPO_NOME}    Lucas
     Input Text    ${CAMPO_CARGO}    Desenvolvedor
     Input Text    ${CAMPO_IMAGEM}    https://picsum.photos/200/300
